@@ -15,6 +15,16 @@ static int init_structures(const void* memory_base, size_t size);
 */
 static void free_structures();
 
+/*
+* Utils
+*/
+static size_t next_power_of_two(size_t x);                     // finds the next power of 2
+static size_t get_required_block_size(size_t requested_size);
+static size_t level_block_size(size_t level);
+static size_t first_index_at_level(size_t level);
+static size_t node_level(size_t node_index);
+static size_t ptr_to_unit_index(void *ptr);
+
 // ------------------- START PROTECTED CODE -------------------
 
 Allocator a;
@@ -161,4 +171,18 @@ static void free_structures() {
     a.level_count = 0;
     a.leaf_count = 0;
     a.node_count = 0;
+}
+
+
+
+// ------------------- UTILS -------------------
+
+static size_t next_power_of_two(size_t x){
+    if(x == 0) return 1; 
+
+    n--;
+    n|= n >> 1;
+    n |= n >>2; 
+    n |= n >>4; 
+
 }
