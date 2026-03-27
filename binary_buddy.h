@@ -1,11 +1,16 @@
 #ifndef BINARY_BUDDY_H
 #define BINARY_BUDDY_H
 
-
 #include <stddef.h>
 #include "buddy_size.h"
 
 // You can add code/struct here if needed
+
+typedef enum {
+    NODE_FREE = 0,
+    NODE_SPLIT = 1,
+    NODE_FULL = 2
+} NodeState;
 
 // ------------------- START PROTECTED CODE -------------------
 
@@ -46,6 +51,13 @@ typedef struct {
 // ------------------- END PROTECTED CODE -------------------
 
     // Add some fields here
+    size_t min_block_size;
+    size_t max_block_size;
+    size_t level_count;
+    size_t leaf_count;
+    size_t node_count;
+    unsigned char *tree;
+    int *alloc_level;
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
 
