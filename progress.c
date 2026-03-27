@@ -1,0 +1,52 @@
+#include <assert.h>
+#include <stdio.h>
+#include "binary_buddy.h"
+
+extern Allocator a;
+
+static void print_allocator_state(void) {
+    printf("\n[Etat allocateur]\n");
+    printf("base           = %p\n", a.base);
+    printf("used_space     = %zu\n", a.used_space);
+    printf("total_size     = %zu\n", a.total_size);
+    printf("min_block_size = %zu\n", a.min_block_size);
+    printf("max_block_size = %zu\n", a.max_block_size);
+    printf("level_count    = %zu\n", a.level_count);
+    printf("leaf_count     = %zu\n", a.leaf_count);
+    printf("node_count     = %zu\n", a.node_count);
+    printf("tree           = %p\n", (void*)a.tree);
+    printf("alloc_level    = %p\n", (void*)a.alloc_level);
+}
+
+int main(void) {
+    void *base = init_buddy(MAX_ALLOC_SIZE);
+
+    assert(base != NULL);
+    assert(base == (void*)a.base);
+    assert(get_used_space() == 0);
+
+    assert(a.total_size == MAX_ALLOC_SIZE);
+    assert(a.min_block_size == MIN_ALLOC_SIZE);
+    assert(a.max_block_size == MAX_ALLOC_SIZE);
+    assert(a.level_count == (MAX_ALLOC_SIZE_BITS - MIN_ALLOC_SIZE_BITS + 1));
+    assert(a.leaf_count == (MAX_ALLOC_SIZE / MIN_ALLOC_SIZE));
+    assert(a.node_count == (2 * a.leaf_count - 1));
+    assert(a.tree != NULL);
+    assert(a.alloc_level != NULL);
+
+    for (size_t i = 0; i < a.node_count; i++) {
+        assert(a.tree[i] == NODE_FREE);
+    }
+
+    for (size_t i = 0; i < a.leaf_count; i++) {
+        assert(a.alloc_level[i] == -1);
+    }
+
+    print_allocator_state();
+    printf("\n[Test init_structures OK]\n");
+
+    assert(free_buddy() == 0);
+    printf("[free_buddy OK]\n");
+
+    return 0;
+}

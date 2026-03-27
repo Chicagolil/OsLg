@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
 #include "binary_buddy.h"
@@ -55,9 +56,109 @@ void bfree(void* ptr) {
 
 static int init_structures(const void* memory_base, size_t size){
     // Implement this function to initialize your data structure used for the buddy allocator
+    
+    size_t level_count; 
+    size_t block_size; 
+    size_t leaf_count; 
+    size_t node_count; 
+
+    if(memory_base == NULL){ 
+        return -1;
+    }
+    
+    if( MIN_ALLOC_SIZE == 0 || MAX_ALLOC_SIZE == 0 ){
+        return -1; 
+    }
+
+    if (MIN_ALLOC_SIZE > MAX_ALLOC_SIZE) {
+        return -1;
+    }
+
+    if ((MIN_ALLOC_SIZE & (MIN_ALLOC_SIZE - 1)) != 0) {
+        return -1;
+    }
+
+
+    if(MIN_ALLOC_SIZE > size || size == 0){
+        return -1;
+    }
+
+    if(size % MIN_ALLOC_SIZE != 0){
+        return -1;
+    }
+
+    if((size & (size -1)) !=0){
+        return -1; 
+    }
+
+    a.base = memory_base; 
+    a.used_space = 0; 
+    a.total_size = size; 
+    a.min_block_size = MIN_ALLOC_SIZE;
+    a.max_block_size = size;
+
+    a.tree = NULL; 
+    a.alloc_level = NULL; 
+
+
+    block_size = size; 
+    level_count = 0;
+    
+    while(block_size >= MIN_ALLOC_SIZE){
+        level_count++; 
+        
+        if(block_size == MIN_ALLOC_SIZE){
+            break; 
+        }
+
+        block_size /=2;
+    }
+
+    if(block_size != MIN_ALLOC_SIZE){
+        return -1; 
+    }
+
+    leaf_count = size / MIN_ALLOC_SIZE; 
+    node_count = (1UL << level_count) - 1;
+
+    a.level_count = level_count; 
+    a.leaf_count = leaf_count; 
+    a.node_count = node_count; 
+
+    a.tree = malloc(node_count * sizeof(unsigned char)); 
+    if(a.tree == NULL){
+        free_structures();
+        return -1; 
+    }
+
+    a.alloc_level = malloc(leaf_count * sizeof(int)); 
+    if(a.alloc_level == NULL){
+        free_structures(); 
+        return -1;
+    }
+
+    memset(a.tree, NODE_FREE, node_count * sizeof(unsigned char));
+
+    for(size_t i = 0; i< leaf_count; i++){
+        a.alloc_level[i] = -1; 
+    }
+
     return 0;
 }
 
 static void free_structures() {
-    // Implement this function to free any internal data structure used by your buddy allocator
+    free(a.tree);
+    free(a.alloc_level);
+
+    a.tree = NULL;
+    a.alloc_level = NULL;
+
+    a.base = NULL;
+    a.used_space = 0;
+    a.total_size = 0;
+    a.min_block_size = 0;
+    a.max_block_size = 0;
+    a.level_count = 0;
+    a.leaf_count = 0;
+    a.node_count = 0;
 }
