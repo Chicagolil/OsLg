@@ -163,9 +163,10 @@ static void free_structures() {
     a.tree = NULL;
     a.alloc_level = NULL;
 
-    a.base = NULL;
+    // a.base = NULL;           free_buddy() en a besoin 
+    // a.total_size = 0;
+
     a.used_space = 0;
-    a.total_size = 0;
     a.min_block_size = 0;
     a.max_block_size = 0;
     a.level_count = 0;
