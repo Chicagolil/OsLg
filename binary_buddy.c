@@ -24,6 +24,7 @@ static size_t level_block_size(size_t level);
 static size_t first_index_at_level(size_t level);
 static size_t node_level(size_t node_index);
 static size_t ptr_to_unit_index(void *ptr);
+static size_t block_size_to_level(size_t block_size);
 
 // ------------------- START PROTECTED CODE -------------------
 
@@ -87,7 +88,6 @@ static int init_structures(const void* memory_base, size_t size){
     if ((MIN_ALLOC_SIZE & (MIN_ALLOC_SIZE - 1)) != 0) {
         return -1;
     }
-
 
     if(MIN_ALLOC_SIZE > size || size == 0){
         return -1;
@@ -184,5 +184,75 @@ static size_t next_power_of_two(size_t x){
     n|= n >> 1;
     n |= n >>2; 
     n |= n >>4; 
+    n |= n>> 8; 
+    n |= n >> 16; 
+    if(sizeof(size_t) == 8){
+        n |= n >> 32;
+    }
+    return n+1;
 
+}
+
+static size_t get_required_block_size(size_t requested_size){
+    size_t block_size; 
+
+    if(requested_size == 0){
+        return 0;
+    }
+
+    if(requested_size > a.total_size){
+        return 0;
+    }
+
+
+    if(requested_size <= a.min_block_size){
+        return a.min_block_size;
+    }
+
+    block_size = next_power_of_two(requested_size);
+
+    if(block_size > a.total_size){
+        return 0;
+    }
+
+    return block_size
+}
+
+static size_t level_block_size(size_t level){
+    return a.total_size >> level;
+}
+
+static size_t first_index_at_level(size_t level){
+    return ((size_t)1 << level) -1;
+}
+
+
+static size_t node_level(size_t node_index){
+    size_t level = 0; 
+    size_t first = 0; 
+    size_t count = 1;
+
+    while(node_index >= first + count){
+        first += count;
+        count *= 2;
+        level++;
+    }
+    return level;
+}
+
+
+static size_t ptr_to_unit_index(void *ptr){
+    size_t offset = (size_t)((char*)ptr - (char*)a.base);
+    return offset/ a.min_block_size;
+}
+
+static size_t block_size_to_level(size_t block_size){
+    size_t level = 0; 
+    size_t current_size = a.total_size;
+
+    while(current_size > block_size){
+        current_size /=2;
+        level++;
+    }
+    return level;
 }
