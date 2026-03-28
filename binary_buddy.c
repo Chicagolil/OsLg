@@ -177,8 +177,8 @@ static void free_structures() {
 
 // ------------------- UTILS -------------------
 
-static size_t next_power_of_two(size_t x){
-    if(x == 0) return 1; 
+static size_t next_power_of_two(size_t n){
+    if(n == 0) return 1; 
 
     n--;
     n|= n >> 1;
@@ -215,7 +215,7 @@ static size_t get_required_block_size(size_t requested_size){
         return 0;
     }
 
-    return block_size
+    return block_size;
 }
 
 static size_t level_block_size(size_t level){
