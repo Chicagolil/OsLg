@@ -26,6 +26,19 @@ static size_t node_level(size_t node_index);
 static size_t ptr_to_unit_index(void *ptr);
 static size_t block_size_to_level(size_t block_size);
 
+
+/*
+* Tree navigation helpers
+*/
+static size_t left_child(size_t index); 
+static size_t right_child(size_t index);
+static size_t parent_index(size_t index);
+static int is_leaf_level(size_t level); 
+static void mark_children_free(size_t index); 
+static long allocate_node(size_t node_index, size_t current_level, size_t target_level);
+
+
+
 // ------------------- START PROTECTED CODE -------------------
 
 Allocator a;
@@ -257,3 +270,40 @@ static size_t block_size_to_level(size_t block_size){
     }
     return level;
 }
+
+
+// ------------------- TREE NAVIGATION HELPERS -------------------
+
+static size_t left_child(size_t index){
+    return (2 * index) + 1;
+}
+
+static size_t right_child(size_t index){
+    return (2 * index) + 2;
+}
+
+static size_t parent_index(size_t index){ 
+    return (index - 1)/2; 
+}
+
+static int is_leaf_level(size_t level){
+    return level == (a.level_count - 1 );
+}
+
+static void mark_children_free(size_t index){
+    size_t left = left_child(index); 
+    size_t right = right_child(index); 
+
+    if(left < a.node_count){
+        a.tree[left] = NODE_FREE; 
+    }
+
+    if(right < a.node_count){
+        a.tree[right] = NODE_FREE; 
+    }
+}
+
+
+static long allocate_node(size_t node_index, size_t current_level, size_t target_level){
+
+}    
