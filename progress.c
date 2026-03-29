@@ -19,7 +19,7 @@ static void print_allocator_state(void) {
 }
 
 int main(void) {
-    void *base 
+    void *base;
     void *p1;
     void *p2;
     void *p3;
