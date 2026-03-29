@@ -19,8 +19,13 @@ static void print_allocator_state(void) {
 }
 
 int main(void) {
-    void *base = init_buddy(MAX_ALLOC_SIZE);
+    void *base 
+    void *p1;
+    void *p2;
+    void *p3;
 
+
+    base = init_buddy(MAX_ALLOC_SIZE);
     assert(base != NULL);
     assert(base == (void*)a.base);
     assert(get_used_space() == 0);
@@ -44,6 +49,26 @@ int main(void) {
 
     print_allocator_state();
     printf("\n[Test init_structures OK]\n");
+
+
+    p1 = balloc(4);
+    assert(p1 == base);
+    assert(get_used_space() == 4);
+
+    p2 = balloc(8);
+    assert(p2 == (void *)((char *)base + 8));
+    assert(get_used_space() == 12);
+
+    p3 = balloc(2);
+    assert(p3 == (void *)((char *)base + 4));
+    assert(get_used_space() == 14);
+
+    printf("p1 = %p\n", p1);
+    printf("p2 = %p\n", p2);
+    printf("p3 = %p\n", p3);
+    printf("used_space = %zu\n", get_used_space());
+    printf("[Test balloc OK]\n");
+
 
     assert(free_buddy() == 0);
     printf("[free_buddy OK]\n");
