@@ -71,7 +71,50 @@ size_t get_used_space(){
 
 void* balloc(size_t size) {
     // Implement this function to allocate a chunk of memory of given size using the buddy allocator
-    return NULL;
+    size_t required_block_size;
+    size_t target_level; 
+    long allocated_node; 
+    size_t level; 
+    size_t first_index; 
+    size_t position_in_level; 
+    size_t offset; 
+    void *ptr; 
+    size_t start_unit; 
+    size_t unit_count;
+
+    required_block_size = get_required_block_size(size);
+
+    if(required_block_size == 0){
+        return NULL;
+    }
+
+    target_level = block_size_to_level(required_block_size); 
+    
+    allocated_node = allocate_node(0,0, target_level); 
+    if(allocated_node == -1){ 
+        return NULL; 
+    }
+
+    // récupérer l'addresse mémoire du noeud alloué
+    level = node_level((size_t)allocated_node);
+    first_index = first_index_at_level(level); 
+    position_in_level = (size_t) allocated_node - first_index; 
+    offset = position_in_level * level_block_size(level); 
+
+    ptr = (void *)((char * )a.base + offset);
+
+    // mise à jour de l'espace utilisé
+    a.used_space += required_block_size; 
+
+    // remplissage de alloc_level
+    start_unit = offset /a.min_block_size; 
+    unit_count = required_block_size / a.min_block_size;
+
+    for (size_t i = 0; i < unit_count; i++ ){
+        a.alloc_level[start_unit + i ] = (int) level; 
+    }
+
+    return ptr;
 }
 
 void bfree(void* ptr) {
