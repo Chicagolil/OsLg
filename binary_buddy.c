@@ -305,5 +305,46 @@ static void mark_children_free(size_t index){
 
 
 static long allocate_node(size_t node_index, size_t current_level, size_t target_level){
+    size_t left; 
+    size_t right; 
+    long result; 
 
+    if(node_index >= a.node_count){     // est ce que le noeud existe ? 
+        return -1; 
+    }
+
+    if(a.tree[node_index] == NODE_FULL){   // est ce que le noeud est plein ? 
+        return -1; 
+    } 
+
+    if(current_level == target_level){    // est ce qu'on est arrivé au niveau voulu ?
+        if(a.tree[node_index] == NODE_FREE){
+            a.tree[node_index] = NODE_FULL;
+            return (long)node_index;
+        }
+        return -1; 
+    }
+
+    if(is_leaf_level(current_level)){   // est ce qu'on est au bout de l'arbre - pas possible d'aller plus bas 
+        return -1; 
+    }
+
+    if(a.tree[node_index] == NODE_FREE){ // si le noeud courant est libre, et qu'on veut aller plus bas, il faut le découper
+        a.tree[node_index]= NODE_SPLIT; 
+        mark_children_free(node_index);
+    }
+
+    if(a.tree[node_index] != NODE_SPLIT){
+        return -1; 
+    }
+
+    left = left_child(node_index);
+    right = right_child(node_index);
+
+    result = allocate_node(left, current_level + 1,target_level);
+    if(result != -1){
+        return result;
+    }
+
+    return allocate_node(right, current_level +1, target_level) ;
 }    
