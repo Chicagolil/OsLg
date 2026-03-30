@@ -4,8 +4,8 @@
 #define BUDDY_SIZE_H
 
 // Can be udpated for testing purposes
-#define MAX_ALLOC_SIZE_BITS 4 // 2^4 = 16 bytes
-#define MIN_ALLOC_SIZE_BITS 1 // 2^1 = 2 bytes
+#define MAX_ALLOC_SIZE_BITS 32 // 2^4 = 16 bytes
+#define MIN_ALLOC_SIZE_BITS 20 // 2^1 = 2 bytes
 
 #define MIN_ALLOC_SIZE (1L << MIN_ALLOC_SIZE_BITS)
 #define MAX_ALLOC_SIZE (1L << MAX_ALLOC_SIZE_BITS)
