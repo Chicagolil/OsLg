@@ -38,6 +38,14 @@ static void mark_children_free(size_t index);
 static long allocate_node(size_t node_index, size_t current_level, size_t target_level);
 
 
+/*
+* bfree() helpers
+*/
+static size_t buddy_index(size_t index); 
+static int children_are_free(size_t index); 
+static void try_merge_upward(size_t index);
+
+
 
 // ------------------- START PROTECTED CODE -------------------
 
@@ -391,3 +399,44 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
 
     return allocate_node(right, current_level +1, target_level) ;
 }    
+
+
+// ------------------- BFREE HELPERS -------------------
+
+static size_t buddy_index(size_t index){ 
+    if(index == 0){
+        return 0;
+    }
+
+    if(index % 2 == 1){
+        return index +1; 
+    }
+    return index - 1;
+}
+
+static int children_are_free(size_t index){
+    size_t left = left_child(index); 
+    size_t right = right_child(index);
+
+    if(left > a.node_count || right > a.node_count){
+        return 0;
+    }
+
+
+    return a.tree[left] == NODE_FREE && a.tree[right] == NODE_FREE;
+}
+
+static void try_merge_upward(size_t index){ 
+    size_t current = index;
+
+    while(current != 0){
+        size_t parent = parent_index(current);
+
+        if(!children_are_free(parent)){
+            a.tree[parent] = NODE_SPLIT; 
+            return;
+        }
+        a.tree[parent] = NODE_FREE; 
+        current = parent;
+    }
+}
