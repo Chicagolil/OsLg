@@ -23,6 +23,7 @@ int main(void) {
     void *p1;
     void *p2;
     void *p3;
+    void *p4;
 
 
     base = init_buddy(MAX_ALLOC_SIZE);
@@ -51,23 +52,36 @@ int main(void) {
     printf("\n[Test init_structures OK]\n");
 
 
+
     p1 = balloc(4);
     assert(p1 == base);
     assert(get_used_space() == 4);
-
+    
     p2 = balloc(8);
     assert(p2 == (void *)((char *)base + 8));
     assert(get_used_space() == 12);
-
+    
     p3 = balloc(2);
     assert(p3 == (void *)((char *)base + 4));
     assert(get_used_space() == 14);
-
+    
+    bfree(p3);
+    assert(get_used_space() == 12);
+    
+    bfree(p1);
+    assert(get_used_space() == 8);
+    
+    p4 = balloc(8);
+    assert(p4 == base);
+    assert(get_used_space() == 16);
+    
     printf("p1 = %p\n", p1);
     printf("p2 = %p\n", p2);
     printf("p3 = %p\n", p3);
+    printf("p4 = %p\n", p4);
     printf("used_space = %zu\n", get_used_space());
-    printf("[Test balloc OK]\n");
+    printf("[Test bfree OK]\n");
+
 
 
     assert(free_buddy() == 0);

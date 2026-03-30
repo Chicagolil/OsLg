@@ -126,7 +126,77 @@ void* balloc(size_t size) {
 }
 
 void bfree(void* ptr) {
-    // Implement this function to deallocate a previously allocated chunk of memory using the buddy allocator
+    size_t offset; 
+    size_t unit_index; 
+    int level_int; 
+    size_t level; 
+    size_t block_size; 
+    size_t position_in_level; 
+    size_t node_index; 
+    size_t first_index;
+    size_t unit_count; 
+    size_t start_unit; 
+
+    if(ptr == NULL){
+        return; 
+    }
+
+    if(a.base == NULL){
+        return;
+    }
+
+
+    offset = (size_t)((char*)ptr - (char*)a.base); 
+
+    if(offset >= a.total_size){
+        return ; 
+    }
+
+    if(offset % a.min_block_size !=0){
+        return;
+    }
+
+    unit_index = offset/a.min_block_size; 
+
+    if(unit_index > a.leaf_count){
+        return; 
+    }
+
+    level_int = a.alloc_level[unit_index]; 
+    if(level_int < 0){
+        return;
+    }
+
+    level = (size_t)level_int; 
+    block_size= level_block_size(level);
+
+    if(offset % block_size != 0){
+        return ;
+    }
+
+    position_in_level = offset/block_size; 
+    first_index = first_index_at_level(level); 
+    node_index = first_index + position_in_level; 
+
+    if(node_index >= a.node_count){
+        return; 
+    }
+
+    if(a.tree[node_index]!= NODE_FULL ){
+        return;
+    }
+
+    a.tree[node_index] = NODE_FREE;
+    a.used_space -= block_size; 
+
+    start_unit = unit_index; 
+    unit_count = block_size/a.min_block_size; 
+
+    for(size_t i = 0; i< unit_count ; i++){ 
+        a.alloc_level[start_unit +i] = -1; 
+    }
+    try_merge_upward(node_index);
+
 }
 
 static int init_structures(const void* memory_base, size_t size){
