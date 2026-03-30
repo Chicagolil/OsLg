@@ -376,10 +376,7 @@ static size_t node_level(size_t node_index){
 }
 
 
-static size_t ptr_to_unit_index(void *ptr){
-    size_t offset = (size_t)((char*)ptr - (char*)a.base);
-    return offset/ a.min_block_size;
-}
+
 
 static size_t block_size_to_level(size_t block_size){
     size_t level = 0; 
@@ -473,16 +470,6 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
 
 // ------------------- BFREE HELPERS -------------------
 
-static size_t buddy_index(size_t index){ 
-    if(index == 0){
-        return 0;
-    }
-
-    if(index % 2 == 1){
-        return index +1; 
-    }
-    return index - 1;
-}
 
 static int children_are_free(size_t index){
     size_t left = left_child(index); 
