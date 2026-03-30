@@ -23,7 +23,6 @@ static size_t get_required_block_size(size_t requested_size);
 static size_t level_block_size(size_t level);
 static size_t first_index_at_level(size_t level);
 static size_t node_level(size_t node_index);
-static size_t ptr_to_unit_index(void *ptr);
 static size_t block_size_to_level(size_t block_size);
 
 
@@ -41,7 +40,6 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
 /*
 * bfree() helpers
 */
-static size_t buddy_index(size_t index); 
 static int children_are_free(size_t index); 
 static void try_merge_upward(size_t index);
 
