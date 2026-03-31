@@ -43,6 +43,8 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
 static int children_are_free(size_t index); 
 static void try_merge_upward(size_t index);
 
+enum { ALLOC_LEVEL_FREE = -1 };
+
 
 
 // ------------------- START PROTECTED CODE -------------------
@@ -85,8 +87,7 @@ void* balloc(size_t size) {
     size_t position_in_level; 
     size_t offset; 
     void *ptr; 
-    size_t start_unit; 
-    size_t unit_count;
+    size_t start_unit;
 
     required_block_size = get_required_block_size(size);
 
@@ -112,13 +113,9 @@ void* balloc(size_t size) {
     // mise à jour de l'espace utilisé
     a.used_space += required_block_size; 
 
-    // remplissage de alloc_level
-    start_unit = offset /a.min_block_size; 
-    unit_count = required_block_size / a.min_block_size;
-
-    for (size_t i = 0; i < unit_count; i++ ){
-        a.alloc_level[start_unit + i ] = (int) level; 
-    }
+    // Stocke le niveau uniquement au debut du bloc pour garder bfree O(log N)
+    start_unit = offset / a.min_block_size;
+    a.alloc_level[start_unit] = (int)level;
 
     return ptr;
 }
@@ -132,8 +129,6 @@ void bfree(void* ptr) {
     size_t position_in_level; 
     size_t node_index; 
     size_t first_index;
-    size_t unit_count; 
-    size_t start_unit; 
 
     if(ptr == NULL){
         return; 
@@ -156,12 +151,12 @@ void bfree(void* ptr) {
 
     unit_index = offset/a.min_block_size; 
 
-    if(unit_index > a.leaf_count){
+    if(unit_index >= a.leaf_count){
         return; 
     }
 
     level_int = a.alloc_level[unit_index]; 
-    if(level_int < 0){
+    if(level_int == ALLOC_LEVEL_FREE){
         return;
     }
 
@@ -187,12 +182,7 @@ void bfree(void* ptr) {
     a.tree[node_index] = NODE_FREE;
     a.used_space -= block_size; 
 
-    start_unit = unit_index; 
-    unit_count = block_size/a.min_block_size; 
-
-    for(size_t i = 0; i< unit_count ; i++){ 
-        a.alloc_level[start_unit +i] = -1; 
-    }
+    a.alloc_level[unit_index] = ALLOC_LEVEL_FREE;
     try_merge_upward(node_index);
 
 }
@@ -281,7 +271,7 @@ static int init_structures(const void* memory_base, size_t size){
     memset(a.tree, NODE_FREE, node_count * sizeof(unsigned char));
 
     for(size_t i = 0; i< leaf_count; i++){
-        a.alloc_level[i] = -1; 
+        a.alloc_level[i] = ALLOC_LEVEL_FREE;
     }
 
     return 0;
@@ -471,7 +461,7 @@ static int children_are_free(size_t index){
     size_t left = left_child(index); 
     size_t right = right_child(index);
 
-    if(left > a.node_count || right > a.node_count){
+    if(left >= a.node_count || right >= a.node_count){
         return 0;
     }
 
