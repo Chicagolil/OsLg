@@ -237,7 +237,6 @@ static int init_structures(const void* memory_base, size_t size){
     a.used_space = 0; 
     a.total_size = size; 
     a.min_block_size = MIN_ALLOC_SIZE;
-    a.max_block_size = size;
 
     a.tree = NULL; 
     a.alloc_level = NULL; 
@@ -300,7 +299,6 @@ static void free_structures() {
 
     a.used_space = 0;
     a.min_block_size = 0;
-    a.max_block_size = 0;
     a.level_count = 0;
     a.leaf_count = 0;
     a.node_count = 0;

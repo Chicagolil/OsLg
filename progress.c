@@ -33,7 +33,6 @@ int main(void) {
 
     assert(a.total_size == MAX_ALLOC_SIZE);
     assert(a.min_block_size == MIN_ALLOC_SIZE);
-    assert(a.max_block_size == MAX_ALLOC_SIZE);
     assert(a.level_count == (MAX_ALLOC_SIZE_BITS - MIN_ALLOC_SIZE_BITS + 1));
     assert(a.leaf_count == (MAX_ALLOC_SIZE / MIN_ALLOC_SIZE));
     assert(a.node_count == (2 * a.leaf_count - 1));

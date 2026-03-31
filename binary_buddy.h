@@ -50,9 +50,7 @@ typedef struct {
 
 // ------------------- END PROTECTED CODE -------------------
 
-    // Add some fields here
     size_t min_block_size;
-    size_t max_block_size;
     size_t level_count;
     size_t leaf_count;
     size_t node_count;
