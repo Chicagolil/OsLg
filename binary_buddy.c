@@ -43,7 +43,7 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
 static int children_are_free(size_t index); 
 static void try_merge_upward(size_t index);
 
-enum { ALLOC_LEVEL_FREE = -1 };
+
 
 
 
