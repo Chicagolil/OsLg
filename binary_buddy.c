@@ -452,7 +452,7 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
     right = right_child(node_index);
 
     if(left < a.node_count && a.has_free[left]){
-        result = allocate_node(left,current_level +1 , target_level)
+        result = allocate_node(left,current_level +1 , target_level);
         if(result !=-1){
             return result;
         }
