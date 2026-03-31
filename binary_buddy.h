@@ -56,6 +56,7 @@ typedef struct {
     size_t leaf_count;
     size_t node_count;
     unsigned char *tree;
+    unsigned char *has_free;
     int *alloc_level;
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
