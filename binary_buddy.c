@@ -116,7 +116,6 @@ void* balloc(size_t size) {
     // mise à jour de l'espace utilisé
     a.used_space += required_block_size; 
 
-    // Stocke le niveau uniquement au debut du bloc pour garder bfree O(log N)
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
 
