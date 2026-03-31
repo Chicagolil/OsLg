@@ -12,7 +12,6 @@ typedef enum {
     NODE_FULL = 2
 } NodeState;
 
-enum { ALLOC_LEVEL_FREE = -1 };
 // ------------------- START PROTECTED CODE -------------------
 
 /* 
