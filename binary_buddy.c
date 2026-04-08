@@ -45,6 +45,10 @@ static void refresh_has_free_upward(size_t index);
 static int children_are_free(size_t index); 
 static void try_merge_upward(size_t index);
 
+/*
+* Question 3
+*/
+static void display_Mem();
 
 enum { ALLOC_LEVEL_FREE = -1 };
 
@@ -569,7 +573,7 @@ static void try_merge_upward(size_t index){
 
 // Question 3 - displayMem(void)
 
-static void displayMem(void){
+static void display_Mem(){
     int current_offset;
     size_t unit_index; 
     size_t offset; 
