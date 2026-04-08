@@ -573,7 +573,7 @@ static void displayMem(void){
     int current_offset;
     current_offset = 0;
 
-    printf("Allocated chunks : \n")
+    printf("Allocated chunks : \n");
 
     while(current_offset <=a.alloc_counter){
         offset = a.ptrs[current_offset];
@@ -589,6 +589,6 @@ static void displayMem(void){
         printf("From address %p to address to address %p \n", ptr, ptr_end);
 
         
-    current_offset++;
+        current_offset++;
     }
 }
