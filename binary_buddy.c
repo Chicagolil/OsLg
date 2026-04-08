@@ -119,6 +119,11 @@ void* balloc(size_t size) {
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
 
+    // Question 1
+    for(size_t i=0; i<required_block_size; i++){
+        ptr[i] = 0; 
+    }
+
     return ptr;
 }
 
@@ -139,7 +144,6 @@ void bfree(void* ptr) {
     if(a.base == NULL){
         return;
     }
-
 
     offset = (size_t)((char*)ptr - (char*)a.base); 
 
@@ -181,6 +185,11 @@ void bfree(void* ptr) {
         return;
     }
 
+    // Question 1 
+    for(size_t i = 0;i<block_size;i++){
+        ptr[i] = 0;
+    }
+    
     a.tree[node_index] = NODE_FREE;
     a.has_free[node_index] = 1;
     a.used_space -= block_size; 
