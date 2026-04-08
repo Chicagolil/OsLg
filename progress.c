@@ -63,7 +63,8 @@ int main(void) {
     p3 = balloc(2);
     assert(p3 == (void *)((char *)base + 4));
     assert(get_used_space() == 14);
-    
+    display_Mem();
+
     bfree(p3);
     assert(get_used_space() == 12);
     

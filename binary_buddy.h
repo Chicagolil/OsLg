@@ -12,6 +12,10 @@ typedef enum {
     NODE_FULL = 2
 } NodeState;
 
+// question 3
+void display_mem();
+
+
 // ------------------- START PROTECTED CODE -------------------
 
 /* 
@@ -65,8 +69,6 @@ typedef struct {
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
 
-// question 3
-void display_mem();
 
 
 #endif // BINARY_BUDDY_H
