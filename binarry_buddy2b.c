@@ -451,21 +451,23 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
     left = left_child(node_index);
     right = right_child(node_index);
 
-    
-    if(left < a.node_count && a.has_free[left]){
-        result = allocate_node(left,current_level +1 , target_level);
-        if(result !=-1){
-            return result;
-        }
-    }
-    
+    // Question 2b - inversion des bloc conditionels pour changer l'ordre des appels récursifs
+
     if(right < a.node_count && a.has_free[right]){
         result = allocate_node(right, current_level + 1, target_level);
         if(result != -1){
             return result;
         }
     }
-    
+
+    if(left < a.node_count && a.has_free[left]){
+        result = allocate_node(left,current_level +1 , target_level);
+        if(result !=-1){
+            return result;
+        }
+    }
+
+
     a.has_free[node_index] = recompute_has_free(node_index);
     refresh_has_free_upward(node_index); 
     return -1;
