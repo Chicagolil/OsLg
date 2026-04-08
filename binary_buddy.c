@@ -235,6 +235,8 @@ static int init_structures(const void* memory_base, size_t size){
     a.tree = NULL; 
     a.has_free = NULL; 
     a.alloc_level = NULL; 
+    // question 3
+    a.ptrs = NULL; 
 
 
     block_size = size; 
@@ -286,6 +288,16 @@ static int init_structures(const void* memory_base, size_t size){
         a.alloc_level[i] = ALLOC_LEVEL_FREE;
     }
 
+    // question 3
+    a.ptrs = malloc(leaf_count * sizeof(int)); 
+    if(a.ptrs == NULL){
+        free_structures(); 
+        return -1;
+    }
+    
+    for(size_t i = 0; i< leaf_count; i++){
+        a.ptrs[i] = -1;
+    }
 
     return 0;
 }
