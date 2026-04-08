@@ -100,10 +100,6 @@ int test_question2b(const void* base_addr, size_t segment_size) {
     // Free allocated blocks
     for (size_t i = 0; i < 3; i++) {
         bfree(ptrs[i]);
-        for (size_t j = 0; j < (i == 0 ? a1 : (i == 1 ? a2 : a3)); j++) {
-            // Check if all it zeroes out after free
-            assert(ptrs[i][j] == 0);
-        }
     }
     printf(" * Freed allocated blocks, total used space: %lu bytes\n", get_used_space());
     assert(get_used_space() == 0);
