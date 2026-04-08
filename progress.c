@@ -10,12 +10,12 @@ static void print_allocator_state(void) {
     printf("used_space     = %zu\n", a.used_space);
     printf("total_size     = %zu\n", a.total_size);
     printf("min_block_size = %zu\n", a.min_block_size);
-    printf("max_block_size = %zu\n", a.max_block_size);
     printf("level_count    = %zu\n", a.level_count);
     printf("leaf_count     = %zu\n", a.leaf_count);
     printf("node_count     = %zu\n", a.node_count);
     printf("tree           = %p\n", (void*)a.tree);
     printf("alloc_level    = %p\n", (void*)a.alloc_level);
+    printf("ptrs           = %p\n", (void*)a.ptrs);
 }
 
 int main(void) {
