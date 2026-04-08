@@ -571,6 +571,15 @@ static void try_merge_upward(size_t index){
 
 static void displayMem(void){
     int current_offset;
+    size_t unit_index; 
+    size_t offset; 
+    void *ptr; 
+    int level_int;
+    size_t level;
+    void* ptr_end;
+    size_t block_size;
+    
+    
     current_offset = 0;
 
     printf("Allocated chunks : \n");
