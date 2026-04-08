@@ -12,7 +12,8 @@ typedef enum {
     NODE_FULL = 2
 } NodeState;
 
-
+// question 3
+void display_mem();
 
 
 // ------------------- START PROTECTED CODE -------------------
@@ -61,7 +62,9 @@ typedef struct {
     unsigned char *has_free;
     int *alloc_level;
 
-
+    // Question 3
+    int *ptrs;
+    int alloc_counter;
 
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it

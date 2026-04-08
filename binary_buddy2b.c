@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-#include "binary_buddy.h"
+#include "binary_buddy2b.h"
 
 /*
 * Initalize the structures needed for the buddy allocator.
@@ -44,7 +44,6 @@ static void refresh_has_free_upward(size_t index);
 */
 static int children_are_free(size_t index); 
 static void try_merge_upward(size_t index);
-
 
 
 enum { ALLOC_LEVEL_FREE = -1 };
@@ -120,9 +119,6 @@ void* balloc(size_t size) {
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
 
-    // question 3
-    a.ptrs[a.alloc_counter] = offset;
-    a.alloc_counter += 1;
 
     return ptr;
 }
@@ -190,18 +186,6 @@ void bfree(void* ptr) {
     a.has_free[node_index] = 1;
     a.used_space -= block_size; 
 
-    // Question 3
-    for(size_t i=0;i <= a.alloc_counter;i++){
-        if(ptr == a.ptrs[i]){
-            ptrs[i] = NULL;
-            // j'ai plus le temps de continuer mais l'idée ici 
-            // c'est de décaler les éléments qui suivent à gauche pour 
-            // garder le tableau ptrs à jour
-        }
-    }
-    a.alloc_counter -= 1;
-    
-
     a.alloc_level[unit_index] = ALLOC_LEVEL_FREE;
     try_merge_upward(node_index);
     refresh_has_free_upward(node_index);
@@ -251,11 +235,6 @@ static int init_structures(const void* memory_base, size_t size){
     a.tree = NULL; 
     a.has_free = NULL; 
     a.alloc_level = NULL; 
-
-    // question 3
-    a.ptrs = NULL; 
-    a.alloc_counter = 0;
-
 
 
     block_size = size; 
@@ -307,17 +286,6 @@ static int init_structures(const void* memory_base, size_t size){
         a.alloc_level[i] = ALLOC_LEVEL_FREE;
     }
 
-    // question 3
-    a.ptrs = malloc(leaf_count * sizeof(int)); 
-    if(a.ptrs == NULL){
-        free_structures(); 
-        return -1;
-    }
-    
-    for(size_t i = 0; i< leaf_count; i++){
-        a.ptrs[i] = -1;
-    }
-
     return 0;
 }
 
@@ -325,9 +293,6 @@ static void free_structures() {
     free(a.tree);
     free(a.has_free);
     free(a.alloc_level);
-
-    // Question 3
-    free(a.ptrs);
 
     a.tree = NULL;
     a.has_free = NULL;
@@ -341,10 +306,6 @@ static void free_structures() {
     a.level_count = 0;
     a.leaf_count = 0;
     a.node_count = 0;
-
-    // question 3
-    a.ptrs = NULL;
-    a.alloc_counter = 0;
 }
 
 
@@ -490,21 +451,23 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
     left = left_child(node_index);
     right = right_child(node_index);
 
-    
-    if(left < a.node_count && a.has_free[left]){
-        result = allocate_node(left,current_level +1 , target_level);
-        if(result !=-1){
-            return result;
-        }
-    }
-    
+    // Question 2b - inversion des bloc conditionels pour changer l'ordre des appels récursifs
+
     if(right < a.node_count && a.has_free[right]){
         result = allocate_node(right, current_level + 1, target_level);
         if(result != -1){
             return result;
         }
     }
-    
+
+    if(left < a.node_count && a.has_free[left]){
+        result = allocate_node(left,current_level +1 , target_level);
+        if(result !=-1){
+            return result;
+        }
+    }
+
+
     a.has_free[node_index] = recompute_has_free(node_index);
     refresh_has_free_upward(node_index); 
     return -1;
@@ -577,41 +540,5 @@ static void try_merge_upward(size_t index){
         a.tree[parent] = NODE_FREE; 
         a.has_free[parent] = 1; 
         current = parent;
-    }
-}
-
-
-// Question 3 - displayMem(void)
-
-void display_mem(){
-    int current_offset;
-    size_t unit_index; 
-    size_t offset; 
-    void *ptr; 
-    int level_int;
-    size_t level;
-    void* ptr_end;
-    size_t block_size;
-    
-    
-    current_offset = 0;
-
-    printf("Allocated chunks : \n");
-
-    while(current_offset <= a.alloc_counter){
-        offset = a.ptrs[current_offset];
-        ptr = (void *)((char * )a.base + offset);        
-        
-        
-        unit_index = offset/a.min_block_size; 
-        level_int = a.alloc_level[unit_index]; 
-        level = (size_t)level_int; 
-        block_size= level_block_size(level);
-
-        ptr_end = (void *)((char * )ptr + block_size);
-        printf("From address %p to address to address %p \n", ptr, ptr_end);
-        
-        
-        current_offset++;
     }
 }

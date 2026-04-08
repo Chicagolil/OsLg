@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-#include "binary_buddy.h"
+#include "binary_buddy1.h"
 
 /*
 * Initalize the structures needed for the buddy allocator.
@@ -119,6 +119,8 @@ void* balloc(size_t size) {
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
 
+    // Question 1
+    memset(ptr, 0, required_block_size * sizeof(unsigned char));
 
     return ptr;
 }
@@ -180,6 +182,9 @@ void bfree(void* ptr) {
     if(a.tree[node_index]!= NODE_FULL ){
         return;
     }
+
+    // Question 1 
+    memset(ptr, 0, block_size * sizeof(unsigned char));
 
 
     a.tree[node_index] = NODE_FREE;
@@ -451,15 +456,6 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
     left = left_child(node_index);
     right = right_child(node_index);
 
-    // Question 2b - inversion des bloc conditionels pour changer l'ordre des appels récursifs
-
-    if(right < a.node_count && a.has_free[right]){
-        result = allocate_node(right, current_level + 1, target_level);
-        if(result != -1){
-            return result;
-        }
-    }
-
     if(left < a.node_count && a.has_free[left]){
         result = allocate_node(left,current_level +1 , target_level);
         if(result !=-1){
@@ -467,6 +463,12 @@ static long allocate_node(size_t node_index, size_t current_level, size_t target
         }
     }
 
+    if(right < a.node_count && a.has_free[right]){
+        result = allocate_node(right, current_level + 1, target_level);
+        if(result != -1){
+            return result;
+        }
+    }
 
     a.has_free[node_index] = recompute_has_free(node_index);
     refresh_has_free_upward(node_index); 
