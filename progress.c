@@ -63,8 +63,7 @@ int main(void) {
     p3 = balloc(2);
     assert(p3 == (void *)((char *)base + 4));
     assert(get_used_space() == 14);
-    display_mem();
-
+    
     bfree(p3);
     assert(get_used_space() == 12);
     
@@ -74,6 +73,7 @@ int main(void) {
     p4 = balloc(8);
     assert(p4 == base);
     assert(get_used_space() == 16);
+    display_mem();
     
     printf("p1 = %p\n", p1);
     printf("p2 = %p\n", p2);

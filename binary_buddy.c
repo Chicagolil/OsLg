@@ -189,6 +189,8 @@ void bfree(void* ptr) {
     a.tree[node_index] = NODE_FREE;
     a.has_free[node_index] = 1;
     a.used_space -= block_size; 
+    // Question 3
+    a.alloc_counter -= 1;
 
     a.alloc_level[unit_index] = ALLOC_LEVEL_FREE;
     try_merge_upward(node_index);
