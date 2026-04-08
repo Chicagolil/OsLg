@@ -65,6 +65,8 @@ typedef struct {
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
 
-// You can add code/struct here if needed
+// question 3
+void display_mem();
+
 
 #endif // BINARY_BUDDY_H
