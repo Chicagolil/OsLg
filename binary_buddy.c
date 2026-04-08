@@ -120,9 +120,7 @@ void* balloc(size_t size) {
     a.alloc_level[start_unit] = (int)level;
 
     // Question 1
-    for(size_t i=0; i<required_block_size; i++){
-        ptr[i] = 0; 
-    }
+    memset(ptr, 0, block_size * sizeof(unsigned char));
 
     return ptr;
 }
@@ -186,10 +184,9 @@ void bfree(void* ptr) {
     }
 
     // Question 1 
-    for(size_t i = 0;i<block_size;i++){
-        ptr[i] = 0;
-    }
-    
+    memset(ptr, 0, block_size * sizeof(unsigned char));
+
+
     a.tree[node_index] = NODE_FREE;
     a.has_free[node_index] = 1;
     a.used_space -= block_size; 
