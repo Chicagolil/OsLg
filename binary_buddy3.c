@@ -193,7 +193,7 @@ void bfree(void* ptr) {
     // Question 3
     for(size_t i=0;i <= a.alloc_counter;i++){
         if(ptr == a.ptrs[i]){
-            ptrs[i] = NULL;
+            a.ptrs[i] = NULL;
           
         }
     }
