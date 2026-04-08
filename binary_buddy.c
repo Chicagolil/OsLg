@@ -118,7 +118,9 @@ void* balloc(size_t size) {
 
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
-
+    
+    // question 3
+    a.ptrs[start_unit] = offset;
 
     return ptr;
 }
