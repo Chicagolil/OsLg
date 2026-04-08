@@ -568,6 +568,27 @@ static void try_merge_upward(size_t index){
 
 
 // Question 3 - displayMem(void)
-static void displayMem(void){
 
+static void displayMem(void){
+    int current_offset;
+    current_offset = 0;
+
+    printf("Allocated chunks : \n")
+
+    while(current_offset <=a.alloc_counter){
+        offset = a.ptrs[current_offset];
+        ptr = (void *)((char * )a.base + offset);        
+        
+        
+        unit_index = offset/a.min_block_size; 
+        level_int = a.alloc_level[unit_index]; 
+        level = (size_t)level_int; 
+        block_size= level_block_size(level);
+
+        ptr_end = (void *)((char * )ptr + block_size);
+        printf("From address %p to address to address %p \n", ptr, ptr_end);
+
+        
+    current_offset++;
+    }
 }
