@@ -235,6 +235,7 @@ static int init_structures(const void* memory_base, size_t size){
     a.tree = NULL; 
     a.has_free = NULL; 
     a.alloc_level = NULL; 
+    a.ptrs = NULL;
 
 
     block_size = size; 
@@ -284,6 +285,10 @@ static int init_structures(const void* memory_base, size_t size){
 
     for(size_t i = 0; i< leaf_count; i++){
         a.alloc_level[i] = ALLOC_LEVEL_FREE;
+    }
+
+    for(size_t i = 0; i< leaf_count; i++){
+        a.ptrs[i] = -1;
     }
 
     return 0;
@@ -539,4 +544,10 @@ static void try_merge_upward(size_t index){
         a.has_free[parent] = 1; 
         current = parent;
     }
+}
+
+
+// Question 3 - displayMem(void)
+static void displayMem(void){
+    
 }
