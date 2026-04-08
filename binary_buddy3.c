@@ -595,7 +595,7 @@ void display_mem(){
     
     current_offset = 0;
 
-    char += ()"Allocated chunks : \n");
+    string += ("Allocated chunks : \n");
 
     while(current_offset <= a.alloc_counter){
         offset = a.ptrs[current_offset];
@@ -608,9 +608,9 @@ void display_mem(){
         block_size= level_block_size(level);
 
         ptr_end = (void *)((char * )ptr + block_size);
-        char += ("From address %p to address to address %p \n", ptr, ptr_end);
+        string += ("From address %p to address to address %p \n", ptr, ptr_end);
         for( size_t i = 0 ; i< ptr.length ; i++){
-            char += (char) ptr[i];
+            string += ((char) ptr[i]);
         }
         
         current_offset++;
