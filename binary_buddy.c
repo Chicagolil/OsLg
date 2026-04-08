@@ -570,7 +570,7 @@ static void try_merge_upward(size_t index){
 
 // Question 3 - displayMem(void)
 
-void display_Mem(){
+void display_mem(){
     int current_offset;
     size_t unit_index; 
     size_t offset; 
