@@ -287,9 +287,6 @@ static int init_structures(const void* memory_base, size_t size){
         a.alloc_level[i] = ALLOC_LEVEL_FREE;
     }
 
-    for(size_t i = 0; i< leaf_count; i++){
-        a.ptrs[i] = -1;
-    }
 
     return 0;
 }

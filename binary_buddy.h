@@ -58,8 +58,7 @@ typedef struct {
     unsigned char *has_free;
     int *alloc_level;
 
-    // Question3
-    int *ptrs;
+
 
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
