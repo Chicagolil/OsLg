@@ -235,7 +235,6 @@ static int init_structures(const void* memory_base, size_t size){
     a.tree = NULL; 
     a.has_free = NULL; 
     a.alloc_level = NULL; 
-    a.ptrs = NULL;
 
 
     block_size = size; 
