@@ -59,7 +59,7 @@ typedef struct {
     int *alloc_level;
 
     // Question3
-    char *ptrs;
+    int *ptrs;
 
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it
