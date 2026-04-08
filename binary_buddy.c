@@ -120,7 +120,7 @@ void* balloc(size_t size) {
     a.alloc_level[start_unit] = (int)level;
 
     // Question 1
-    memset(ptr, 0, block_size * sizeof(unsigned char));
+    memset(ptr, 0, required_block_size * sizeof(unsigned char));
 
     return ptr;
 }
