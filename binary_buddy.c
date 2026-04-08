@@ -120,7 +120,7 @@ void* balloc(size_t size) {
     a.alloc_level[start_unit] = (int)level;
 
     // question 3
-    a.ptrs[alloc_counter] = offset;
+    a.ptrs[a.alloc_counter] = offset;
     a.alloc_counter += 1;
 
     return ptr;
@@ -311,7 +311,7 @@ static void free_structures() {
     free(a.tree);
     free(a.has_free);
     free(a.alloc_level);
-    
+
     // Question 3
     free(a.ptrs);
 
