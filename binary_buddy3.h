@@ -13,7 +13,7 @@ typedef enum {
 } NodeState;
 
 // question 3
-void display_mem();
+void display_mem(void);
 
 
 // ------------------- START PROTECTED CODE -------------------

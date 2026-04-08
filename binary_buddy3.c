@@ -193,10 +193,8 @@ void bfree(void* ptr) {
     // Question 3
     for(size_t i=0;i <= a.alloc_counter;i++){
         if(ptr == a.ptrs[i]){
-            a.ptrs[i] = NULL;
-            // j'ai plus le temps de continuer mais l'idée ici 
-            // c'est de décaler les éléments qui suivent à gauche pour 
-            // garder le tableau ptrs à jour
+            ptrs[i] = NULL;
+          
         }
     }
     a.alloc_counter -= 1;
