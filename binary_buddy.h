@@ -60,6 +60,7 @@ typedef struct {
 
     // Question 3
     int *ptrs;
+    int alloc_couter;
 
 
 } Allocator; // Cannot modify the name of this struct, but you can add fields to it

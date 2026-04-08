@@ -118,9 +118,10 @@ void* balloc(size_t size) {
 
     start_unit = offset / a.min_block_size;
     a.alloc_level[start_unit] = (int)level;
-    
+
     // question 3
-    a.ptrs[start_unit] = offset;
+    a.ptrs[alloc_counter] = offset;
+    a.alloc_counter += 1;
 
     return ptr;
 }
@@ -239,6 +240,8 @@ static int init_structures(const void* memory_base, size_t size){
     a.alloc_level = NULL; 
     // question 3
     a.ptrs = NULL; 
+    a.alloc_counter = 0;
+
 
 
     block_size = size; 
@@ -308,6 +311,9 @@ static void free_structures() {
     free(a.tree);
     free(a.has_free);
     free(a.alloc_level);
+    
+    // Question 3
+    free(a.ptrs);
 
     a.tree = NULL;
     a.has_free = NULL;
@@ -321,6 +327,10 @@ static void free_structures() {
     a.level_count = 0;
     a.leaf_count = 0;
     a.node_count = 0;
+
+    // question 3
+    a.ptrs = NULL;
+    a.alloc_counter = 0;
 }
 
 
@@ -559,5 +569,5 @@ static void try_merge_upward(size_t index){
 
 // Question 3 - displayMem(void)
 static void displayMem(void){
-    
+
 }
